@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import '../../models/grocery.dart';
 
 class NewItem extends StatefulWidget {
-  const NewItem({super.key});
+  final void Function(Grocery) onCreate;
+  const NewItem({super.key, required this.onCreate});
 
   @override
   State<NewItem> createState() {
@@ -12,7 +13,6 @@ class NewItem extends StatefulWidget {
 }
 
 class _NewItemState extends State<NewItem> {
-
   // Default settings
   static const defautName = "New grocery";
   static const defaultQuantity = 1;
@@ -47,6 +47,19 @@ class _NewItemState extends State<NewItem> {
 
   void onAdd() {
     // Will be implemented later - Create and return the new grocery
+    var quantityController = _quantityController.text;
+    if (quantityController.isEmpty) {
+      return;
+    }
+    if (int.tryParse(quantityController) == null) {
+      return;
+    }
+    final newGrocery = Grocery(
+      name: _nameController.text,
+      quantity: int.tryParse(quantityController),
+      category: _selectedCategory,
+    );
+    Navigator.pop();
   }
 
   @override
@@ -76,7 +89,6 @@ class _NewItemState extends State<NewItem> {
                 Expanded(
                   child: DropdownButtonFormField<GroceryCategory>(
                     initialValue: _selectedCategory,
-                    items: [  ],
                     onChanged: (value) {
                       if (value != null) {
                         setState(() {
@@ -84,6 +96,16 @@ class _NewItemState extends State<NewItem> {
                         });
                       }
                     },
+                    items: GroceryCategory.values
+                        .map<DropdownMenuItem<GroceryCategory>>((
+                          GroceryCategory value,
+                        ) {
+                          return DropdownMenuItem<GroceryCategory>(
+                            value: value,
+                            child: Text(value.name.toUpperCase()),
+                          );
+                        })
+                        .toList(),
                   ),
                 ),
               ],
@@ -93,10 +115,7 @@ class _NewItemState extends State<NewItem> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(onPressed: onReset, child: const Text('Reset')),
-                ElevatedButton(
-                  onPressed: onAdd,
-                  child: const Text('Add Item'),
-                ),
+                ElevatedButton(onPressed: onAdd, child: const Text('Add Item')),
               ],
             ),
           ],
