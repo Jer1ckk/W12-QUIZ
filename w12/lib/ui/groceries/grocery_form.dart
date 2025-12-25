@@ -59,7 +59,7 @@ class _NewItemState extends State<NewItem> {
       quantity: int.tryParse(quantityController),
       category: _selectedCategory,
     );
-    Navigator.pop(contextg);
+    Navigator.pop(context);
   }
 
   @override
