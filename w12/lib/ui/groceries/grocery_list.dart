@@ -14,9 +14,12 @@ class GroceryList extends StatefulWidget {
 class _GroceryListState extends State<GroceryList> {
   void onCreate() {
     // TODO-4 - Navigate to the form screen using the Navigator
-    Navigator.push(context, MaterialPageRoute(builder: (context) => NewItem(Grocery )));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => NewItem(onCreate: addNewGrocery,)));
   }
 
+  void addNewGrocery(Grocery newGrocery){
+    dummyGroceryItems.add(newGrocery);
+  }
   @override
   Widget build(BuildContext context) {
     Widget content = const Center(child: Text('No items added yet.'));
